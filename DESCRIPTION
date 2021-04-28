@@ -17,4 +17,5 @@ Imports:
 	dplyr,
 	purrr,
 	sf,
-	magrittr
+	magrittr,
+	tidytransit
