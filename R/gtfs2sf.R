@@ -17,9 +17,13 @@ gtfs2RouteLines <- function(routesDf_GTFS, tripsDf_GTFS, shapesDf_GTFS){
   # Make sure data.table knows we know we're using it (solution to bug)
   .datatable.aware = TRUE
   
-  if (data.table::is.data.table(routesDf_GTFS) == F) stop("routesDf_GTFS object must be of type 'data.table'")
-  if (data.table::is.data.table(tripsDf_GTFS) == F) stop("tripsDf_GTFS object must be of type 'data.table'")
-  if (data.table::is.data.table(shapesDf_GTFS) == F) stop("shapesDf_GTFS object must be of type 'data.table'")
+  # Convert data to data.table if not already in that format
+  if (data.table::is.data.table(routesDf_GTFS) == F){
+    data.table::setDT(routesDf_GTFS)}
+  if (data.table::is.data.table(tripsDf_GTFS) == F){
+    data.table::setDT(tripsDf_GTFS)}
+  if (data.table::is.data.table(shapesDf_GTFS) == F){
+    data.table::setDT(shapesDf_GTFS)}
   
   # Get original shapes as sf from tidytransit package
   shapeSpatial <- tidytransit::shapes_as_sf(shapesDf_GTFS)
