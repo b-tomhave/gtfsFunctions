@@ -20,16 +20,16 @@ gtfs2RouteLines <- function(routesDf_GTFS, tripsDf_GTFS, shapesDf_GTFS){
   if (data.table::is.data.table(tripsDf_GTFS) == F) stop("tripsDf_GTFS object must be of type 'data.table'")
   if (data.table::is.data.table(shapesDf_GTFS) == F) stop("shapesDf_GTFS object must be of type 'data.table'")
   #Load Route and Shape ID From Trips Datafame
-  shape_key <- unique(tripsDf_GTFS[, list(route_id, shape_id)])
+  shape_key <- unique(tripsDf_GTFS[, list(tripsDf_GTFS$route_id, tripsDf_GTFS$shape_id)])
   
   #Load Route Name and ID From Routes Datafame
-  route_key <- routesDf_GTFS[, list(route_id, route_short_name)]
+  route_key <- routesDf_GTFS[, list(routesDf_GTFS$route_id, routesDf_GTFS$route_short_name)]
   data.table::setkey(route_key,route_id) # Set Key For Joining To Occur On "route_id"
   route_key <- route_key[shape_key] # Inner Join routes and shapes on route_id
 
   #Assign color to route
   if ( !is.null(routesDf_GTFS$route_color) ) { # extract if they exist
-    route_key[routesDf_GTFS[, list(route_color, route_id)], on = 'route_id']
+    route_key[routesDf_GTFS[, list(routesDf_GTFS$route_color, routesDf_GTFS$route_id)], on = 'route_id']
   }else { # planB: build a pal from my pallette 'd3'
     route_key[,route_color := rep(ggsci::pal_d3()(10),
                                  length.out = nrow(route_key))]}
@@ -40,7 +40,7 @@ gtfs2RouteLines <- function(routesDf_GTFS, tripsDf_GTFS, shapesDf_GTFS){
   ## build the sf object ----
   # exctract lon/lat values as matrix to build linestrings for each "shape_id"
   sfc <- shapesDf_GTFS %>% # long data frame
-    split(.$shape_id) %>% # list of shorted data framee, one per shape
+    split(.$shape_id) %>% # list of shorted data frame, one per shape
     purrr::map(~ dplyr::select(., shape_pt_lon, shape_pt_lat) %>% # order maters, lon-1st lat-2nd
                  as.matrix() %>% # coherce for st_linestrings happiness
                  sf::st_linestring()) %>%
