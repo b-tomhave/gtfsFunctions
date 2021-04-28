@@ -20,16 +20,16 @@ gtfs2RouteLines <- function(routesDf_GTFS, tripsDf_GTFS, shapesDf_GTFS){
   if (data.table::is.data.table(tripsDf_GTFS) == F) stop("tripsDf_GTFS object must be of type 'data.table'")
   if (data.table::is.data.table(shapesDf_GTFS) == F) stop("shapesDf_GTFS object must be of type 'data.table'")
   #Load Route and Shape ID From Trips Datafame
-  shape_key <- unique(tripsDf_GTFS[, .(route_id, shape_id)])
+  shape_key <- unique(tripsDf_GTFS[, list(route_id, shape_id)])
   
   #Load Route Name and ID From Routes Datafame
-  route_key <- routesDf_GTFS[, .(route_id, route_short_name)]
+  route_key <- routesDf_GTFS[, list(route_id, route_short_name)]
   data.table::setkey(route_key,route_id) # Set Key For Joining To Occur On "route_id"
   route_key <- route_key[shape_key] # Inner Join routes and shapes on route_id
 
   #Assign color to route
   if ( !is.null(routesDf_GTFS$route_color) ) { # extract if they exist
-    route_key[routesDf_GTFS[, .(route_color, route_id)], on = 'route_id']
+    route_key[routesDf_GTFS[, list(route_color, route_id)], on = 'route_id']
   }else { # planB: build a pal from my pallette 'd3'
     route_key[,route_color := rep(ggsci::pal_d3()(10),
                                  length.out = nrow(route_key))]}
