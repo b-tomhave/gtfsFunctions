@@ -10,7 +10,7 @@ calculateFrequenciesByTrip(gtfs)
 \item{gtfs}{object from tidytransit read_gtfs()}
 }
 \value{
-data.table conforming to gtfs frequencies.txt format.
+data.table conforming to gtfs frequencies.txt format with times as ITime (integer seconds)
 }
 \description{
 Calculate frequencies for gtfs frequencies.txt (frequency in seconds for each trip_id). Can take up to 20 seconds or so

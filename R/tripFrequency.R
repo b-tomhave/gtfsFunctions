@@ -2,7 +2,7 @@
 #'
 #' @param x character column or single character of times in "HH:MM:SS" format.
 #'
-#' @return character column or single character in data.table ITime format which displays regular time but is made of integer values
+#' @return character column or single character in data.table ITime format which displays regular time but is made of integer seconds
 #' @export
 #' 
 as.TransitTime <- function(x) {
@@ -17,7 +17,7 @@ as.TransitTime <- function(x) {
 #'
 #' @param gtfs object from tidytransit read_gtfs()
 #'
-#' @return data.table conforming to gtfs frequencies.txt format.
+#' @return data.table conforming to gtfs frequencies.txt format with times as ITime (integer seconds)
 #' @import data.table
 #' @export
 #' 
@@ -59,5 +59,5 @@ calculateFrequenciesByTrip <- function(gtfs) {
   freqs[is.na(end_time), end_time := start_time + headway_secs - 1L]
   freqs[, headway_prev := NULL]
   
-  freqs[, .(trip_id, start_time = as.character(start_time), end_time = as.character(end_time), headway_secs, exact_times)]
+  freqs[, .(trip_id, start_time = start_time, end_time = end_time, headway_secs, exact_times)]
 }

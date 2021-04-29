@@ -10,7 +10,7 @@ as.TransitTime(x)
 \item{x}{character column or single character of times in "HH:MM:SS" format.}
 }
 \value{
-character column or single character in data.table ITime format which displays regular time but is made of integer values
+character column or single character in data.table ITime format which displays regular time but is made of integer seconds
 }
 \description{
 Function to convert HH:MM:SS to seconds after midnight
