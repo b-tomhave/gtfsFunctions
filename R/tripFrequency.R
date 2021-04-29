@@ -21,7 +21,7 @@ as.TransitTime <- function(x) {
 #' @import data.table
 #' @export
 #' 
-calculateFrequencies <- function(gtfs) {
+calculateFrequenciesByTrip <- function(gtfs) {
   departure_time = trip_id = stop_sequence = headway_secs = headway_prev = end_time = start_time = end_time = exact_times = NULL # due to NSE notes in R CMD check
   #`.` = function(...) NULL
   
