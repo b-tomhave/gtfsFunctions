@@ -1,18 +1,3 @@
-#' Function to convert HH:MM:SS to seconds after midnight
-#'
-#' @param x character column or single character of times in "HH:MM:SS" format.
-#'
-#' @return character column or single character in data.table ITime format which displays regular time but is made of integer seconds
-#' @export
-#' 
-as.TransitTime <- function(x) {
-  V1 = V2 = V3 = NULL # Fix data.table NSE CRAN checks
-  y = data.table::as.data.table(data.table::tstrsplit(x, ':', type.convert = TRUE, fill = 0L))
-  if (!'V3' %in% names(y)) {y[, `:=` (V3 = 0L)]}
-  y[, structure(V1 * 3600 + V2 * 60 + V3, class = 'ITime')]
-}
-
-
 #' Calculate frequencies for gtfs frequencies.txt (frequency in seconds for each trip_id). Can take up to 20 seconds or so
 #'
 #' @param gtfs object from tidytransit read_gtfs()

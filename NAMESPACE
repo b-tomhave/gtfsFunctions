@@ -3,5 +3,6 @@
 export(as.TransitTime)
 export(calculateFrequenciesByTrip)
 export(gtfs2RouteLines)
+export(transitTime2HHMMSS)
 import(data.table)
 importFrom(magrittr,"%>%")

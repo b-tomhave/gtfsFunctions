@@ -19,4 +19,5 @@ Imports:
 	sf,
 	magrittr,
 	tidytransit,
-	RColorBrewer
+	RColorBrewer,
+	stringr
