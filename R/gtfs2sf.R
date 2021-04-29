@@ -33,8 +33,16 @@ gtfs2RouteLines <- function(routesDf_GTFS, tripsDf_GTFS, shapesDf_GTFS){
   data.table::setkey(shape_key,route_id) # Set Key For Joining To Occur On "route_id"
   
   # Assign color to route
-  shape_key<- shape_key[,route_color := rep(ggsci::pal_d3()(10),
-                                length.out = nrow(shape_key))]
+  # shape_key<- shape_key[,route_color := rep(ggsci::pal_d3()(10),
+  #                               length.out = nrow(shape_key))]
+
+  # For each route group check if color exists. If not create random hex color. If one exists but doesn't have a pound sign add it, otherwise keep color
+  shape_key <- shape_key[, route_color4:= ifelse(route_color == "", 
+                                                 sample(RColorBrewer::brewer.pal(8, "Dark2"),1),
+                                                 ifelse(substring(shape_key$route_color, 1, 1) == "#",
+                                                        sample(RColorBrewer::brewer.pal(8, "Dark2"),1),
+                                                        paste0("#", route_color))),
+                         by = route_id]
   # if ( !is.null(routesDf_GTFS$route_color) ) { # extract if they exist
   #   shape_key[routesDf_GTFS[, .(route_color, route_id)], on = 'route_id']
   # }else { # planB: build a pal from my pallette 'd3'
