@@ -46,3 +46,39 @@ calculateFrequenciesByTrip <- function(gtfs) {
   
   freqs[, .(trip_id, start_time = start_time, end_time = end_time, headway_secs, exact_times)]
 }
+
+
+#' Calculate frequencies per route and time of day from tidytransit gtfs object
+#'
+#' @param gtfs object from tidytransit read_gtfs()
+#'
+#' @return data.table containing route, time period, and average headway
+#' @import data.table
+#' @export
+#' 
+calculateFrequenciesByRoute <- function(gtfs) {
+  tripHeadways <- gtfsFunctions::calculateFrequenciesByTrip(gtfs)
+  tripHeadways$headway_mins <- tripHeadways$headway_secs/60
+  
+  # Join trips.txt to this to get route_ids (only use route_ids to limit size)
+  tripHeadways <- tripHeadways[dplyr::select(gtfs$trips, route_id,trip_id, service_id) , on = "trip_id"] # Join with route_ids
+  
+  # Reference table of seconds after midnight time od day (TOD) table for reference
+  TOD <- data.table::data.table(BeginTime = c(0,14400,21600,32400,54000,66600,75600,86400),
+                               EndTime = c(14400,21600,32400,54000,66600,75600,86400,100800),
+                               Period = factor(c("Owl","Early","AM Peak","Midday",
+                                                 "PM Peak","Evening", "Night","Owl"),
+                                               levels = c("Early","AM Peak","Midday", "PM Peak",
+                                                          "Evening", "Night", "Owl"),
+                                               ordered = T))
+  # Join time of day categorization to table
+  tripHeadways[TOD, period := Period, on = .(start_time > BeginTime, start_time<= EndTime)]
+  
+  # Calculate average headway for route-time of day group. Round down to nearest minute
+  tripHeadways[, avgHeadway := floor(mean(headway_mins)), by = c("route_id", "period")]
+  
+  tripHeadways[, route_id := gtools::mixedsort(route_id)]
+  
+  dplyr::select(tripHeadways, route_id, period, avgHeadway)%>%dplyr::distinct()
+  
+}
