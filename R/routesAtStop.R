@@ -32,3 +32,42 @@ routesAtStops <- function(gtfs) {
   stopsDf[, list(stop_id, route_id, stop_code,  
                  stop_name, stop_lat, stop_lon)]%>%unique()
 }
+
+
+#' Function to take string of form '2,4,5,21,56' and convert to a list of form ('2','4','21','56')
+#'
+#' @param row Leave empty and use as function in lapply
+#'
+#' @return column of lists
+#' @export
+#' 
+commaCharacter2List <- function(row) {
+  return (as.list(el(strsplit(row, ","))))
+}
+
+
+#' Function To Simplify gtfsFunctions::routesAtStops() to include only one record per stop with a column containing a list of all routes at stop.
+#'
+#' @param stopsTable stops table from gtfsFunctions::routesAtStops() or stops.txt with one row per route-stop combo. MUST have "route_id" column
+#' @param route_ColumnName route_id column name character
+#'
+#' @return data.table with one record per stop and new field 'routesAtStop' that is a list of all routes at stop
+#' @export
+#' 
+simplifyRoutesAtStops <- function(stopsTable) { 
+  simplifiedTable <- unique(stopsTable)[, routesAtStop := paste0(route_id, collapse = ','), by = stop_id]
+    # stopsTable%>%unique()%>% 
+    #                     dplyr::group_by(stop_id) %>% 
+    #                     #dplyr::arrange(gtools::mixedsortroute_id)%>%
+    #                     dplyr::mutate(routesAtStop = paste0(route_id, collapse = ",")) #%>%#Create new field with string of all routes serving stop
+    #                     #ungroup()
+  
+    simplifiedTable <- subset(simplifiedTable, select = -c(route_id))%>%dplyr::distinct()
+  
+  simplifiedTable$routesAtStop <- sapply(strsplit(simplifiedTable$routesAtStop,','), function(x) toString(gtools::mixedsort(x)))
+  
+  # Reformat routesAtStop column to be a list
+  #simplifiedTable$routesAtStop <- lapply(simplifiedTable$routesAtStop, commaCharacter2List)
+  return(as.data.table(simplifiedTable))
+}
+
