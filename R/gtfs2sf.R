@@ -35,14 +35,14 @@ gtfs2RouteLines <- function(routesDf_GTFS, tripsDf_GTFS, shapesDf_GTFS){
   # Create or load basic route_color field
   if ( !is.null(routesDf_GTFS$route_color) ) { # extract if they exist
     shape_key <- shape_key[routesDf_GTFS[, .(route_color, route_id)], on = 'route_id']
-  }else { # planB: build a pal from my pallette 'd3'
+  }else{ # planB: build a pal from my pallette 'd3'
     shape_key <- shape_key[,route_color := rep("",
                                  length.out = nrow(shape_key))]}
   
   
-  # Modify route colors
+  # Modify route colors if not set or white (FFFFFF)
   # For each route group check if color exists. If not create random hex color. If one exists but doesn't have a pound sign add it, otherwise keep color
-  shape_key <- shape_key[, route_color:= ifelse(route_color == "", 
+  shape_key <- shape_key[, route_color:= ifelse(route_color == "" | route_color == "FFFFFF", 
                                                  sample(RColorBrewer::brewer.pal(8, "Dark2"),1),
                                                  ifelse(substring(route_color, 1, 1) == "#",
                                                         sample(RColorBrewer::brewer.pal(8, "Dark2"),1),
