@@ -2,7 +2,7 @@
 
 export(as.TransitTime)
 export(calculateFrequenciesByRoute)
-export(calculateFrequenciesByTrip)
+export(calculateFrequenciesByTripAndService)
 export(commaCharacter2List)
 export(formatGTFSObject)
 export(gtfs2RouteLines)
