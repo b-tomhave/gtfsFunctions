@@ -13,11 +13,10 @@
 formatGTFSObject <- function(gtfsZipPath){
   # Import tidytransit gtfs object from path and only focusing on key required files listed below
   x <- tidytransit::read_gtfs(as.character(gtfsZipPath),
-                               files = c('agency', 'stops', 'routes', 'trips',
-                                         'stop_times', 'calendar', 'calendar_dates',
-                                         'shapes'),
-                               parse_dates = T)
-                           
+                              files = c('agency', 'stops', 'routes', 'trips',
+                                        'stop_times', 'calendar', 'calendar_dates',
+                                        'shapes'))
+  
   # Ensure all Input Files are Data.Table Objects
   setDT(x$stop_times)
   setDT(x$trips)
@@ -27,7 +26,7 @@ formatGTFSObject <- function(gtfsZipPath){
   setDT(x$stops)
   setDT(x$agency)
   setDT(x$routes)
-            
+  
   # Only Include Stops that occur in stop_times file
   x$stops <- x$stops[stop_id %in% unique(as.character(x$stop_times$stop_id))]
   
@@ -38,7 +37,7 @@ formatGTFSObject <- function(gtfsZipPath){
   x$routes$route_url <- paste0("<a href='", x$routes$route_url, "'>", x$routes$route_url,"</a>")
   x$stops$stop_url <- paste0("<a href='", x$stops$stop_url, "'>", x$stops$stop_url,"</a>")
   x$agency$agency_url <- paste0("<a href='", x$agency$agency_url, "'>", x$agency$agency_url,"</a>")
-                           
+  
   
   # ROUTES.txt: Change column type and row order
   x$routes <- x$routes[gtools::mixedorder(as.character(route_short_name))] # Set row order based on route_short_name
@@ -46,16 +45,16 @@ formatGTFSObject <- function(gtfsZipPath){
   
   # Only change agency_id class if present (i.e. STL Metro Transit Doesn't Have Field)
   if ("agency_id" %in% names(x$routes)){
-   x$routes$agency_id <- as.factor(x$routes$agency_id) # Make agency_id a factor for easier datatable filtering 
+    x$routes$agency_id <- as.factor(x$routes$agency_id) # Make agency_id a factor for easier datatable filtering 
   }
   
-
+  
   x$trips <- unique(x$trips)
   x$routes <- unique(x$routes)
   
   # Create Column That is route_short_name if present, else route_id
   # Useful for working with data where route_id doesn't directly correspond to same number that is public-facing
   x$routes$formattedRouteName <- with(x$routes, ifelse(route_short_name == "", as.character(route_id), as.character(route_short_name)))
-
+  
   return(x)
 }
