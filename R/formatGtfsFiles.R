@@ -9,10 +9,10 @@
 #' @return A gtfs/list object with a single data.table for each of the primary gtfs tables (listed above)
 #' @import data.table
 #' @export
-
+#' 
 formatGTFSObject <- function(gtfsZipPath){
   # Import tidytransit gtfs object from path and only focusing on key required files listed below
-  x <- tidytransit::read_gtfs(as.character(gtfsZipPath),
+  x <- gtfsio::import_gtfs(as.character(gtfsZipPath),
                               files = c('agency', 'stops', 'routes', 'trips',
                                         'stop_times', 'calendar', 'calendar_dates',
                                         'shapes'))
