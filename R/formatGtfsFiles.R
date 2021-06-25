@@ -14,7 +14,7 @@ formatGTFSObject <- function(gtfsZipPath){
   # Import tidytransit gtfs object from path and only focusing on key required files listed below
   x <- gtfsio::import_gtfs(as.character(gtfsZipPath),
                               files = c('agency', 'stops', 'routes', 'trips',
-                                        'stop_times', 'calendar', 'calendar_dates',
+                                        'stop_times', #'calendar', 'calendar_dates',
                                         'shapes'))
   
   # Ensure all Input Files are Data.Table Objects
