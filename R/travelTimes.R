@@ -8,8 +8,6 @@
 #' @param endHHMMSSRange end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00")
 #'
 #' @return summary of travel times in specified time range
-#' @import data.table
-#' @import dplyr
 #' @export
 #' 
 generateTravelTimeSummary <- function(gtfs,beginStopID, endStopID,
@@ -69,8 +67,6 @@ generateTravelTimeSummary <- function(gtfs,beginStopID, endStopID,
 #' @param endHHMMSSRange end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00")
 #'
 #' @return summary of travel times in specified time range
-#' @import data.table
-#' @import dplyr
 #' @export
 #' 
 calculateMedianTravelTime <- function(gtfs,beginStopID, endStopID,

@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Ben",
            family = "Tomhave",
            role = c("aut", "cre"),
-           email = "tomha021@umn.edu")
+           email = "bentomhave@outlook.com")
 Description: This package contains a variety of functions (that I have written or adapted) that I have found to be helpful when working with GTFS data.
 License: `use_mit_license()`
 Encoding: UTF-8
@@ -21,4 +21,6 @@ Imports:
 	tidytransit,
 	RColorBrewer,
 	stringr,
-	gtools
+	gtools,
+	tigris,
+	sp
