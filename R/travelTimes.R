@@ -25,7 +25,7 @@ generateTravelTimeSummary <- function(gtfs, beginStopID, endStopID,
   data.table::setDT(stop_times)
   
   # Join trips and stop times and only keep relevant stops
-  sch <- trips[stop_times, on = 'trip_id']%>%filter(as.character(stop_id) %in% c(as.character(beginStopID), as.character(endStopID)) & as.character(route_id) == as.character(routeID))
+  sch <- trips[stop_times, on = 'trip_id'] %>% dplyr::filter(as.character(stop_id) %in% c(as.character(beginStopID), as.character(endStopID)) & as.character(route_id) == as.character(routeID))
   
   # Convert time format to integer seconds
   sch$arrival_time <- gtfsFunctions::as.TransitTime(sch$arrival_time)
@@ -63,6 +63,10 @@ generateTravelTimeSummary <- function(gtfs, beginStopID, endStopID,
     stop('Error: Data does not exist for the selected combination of stop ids time of day and route. Please change inputs.')
   }
 }
+
+
+x <- gtfsFunctions::formatGTFSObject("C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\MSP_MetroTransit_June21.zip")
+
 
 
 #' Calculate travel time median between two stop_ids on a given route
