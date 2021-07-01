@@ -65,10 +65,6 @@ generateTravelTimeSummary <- function(gtfs, beginStopID, endStopID,
 }
 
 
-x <- gtfsFunctions::formatGTFSObject("C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\MSP_MetroTransit_June21.zip")
-
-
-
 #' Calculate travel time median between two stop_ids on a given route
 #'
 #' @param gtfs object from gtfsFunctions::formatGTFSObject()
