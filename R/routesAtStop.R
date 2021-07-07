@@ -46,6 +46,32 @@ commaCharacter2List <- function(row) {
 }
 
 
+
+#' Faster function to simplify gtfsFunctions::routeIDAtStops() to include only one record per stop with a column containing a list of all routes at stop.
+#'
+#' @param gtfsObject stops table from gtfsFunctions::routeIDAtStops() or stops.txt with one row per route-stop combo. MUST have "route_id" column
+#'
+#' @return Names list of all routes at stop where stop is name and routes are values 
+#' @export
+#' 
+namedList_RoutesAtStops <- function(gtfsObject) { 
+  stopTable_Long <- gtfsFunctions::routeIDAtStops(gtfsObject)
+  return(split(stopTable_Long$route_id,stopTable_Long$stop_id))
+}
+  
+  
+#' Faster function to simplify gtfsFunctions::routeIDAtStops() to include only one record per stop with a column containing a list of all routes at stop.
+#'
+#' @param gtfsObject stops table from gtfsFunctions::routeIDAtStops() or stops.txt with one row per route-stop combo. MUST have "route_id" column
+#'
+#' @return Names list of all routes at stop where route_id is name and stop_ids are values 
+#' @export
+#' 
+namedList_StopsOnRoutes <- function(gtfsObject) { 
+  stopTable_Long <- gtfsFunctions::routeIDAtStops(gtfsObject)
+  return(split(stopTable_Long$stop_id,stopTable_Long$route_id))
+}
+
 #' Function To Simplify gtfsFunctions::routeIDAtStops() to include only one record per stop with a column containing a list of all routes at stop.
 #'
 #' @param gtfsObject stops table from gtfsFunctions::routeIDAtStops() or stops.txt with one row per route-stop combo. MUST have "route_id" column
