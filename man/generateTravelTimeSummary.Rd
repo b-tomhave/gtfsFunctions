@@ -2,7 +2,7 @@
 % Please edit documentation in R/travelTimes.R
 \name{generateTravelTimeSummary}
 \alias{generateTravelTimeSummary}
-\title{Generate travel time summary between two stop_ids on a given route}
+\title{Generate travel time summary between two stop_ids on a given route for a time range (default is 5AM-11:30PM)}
 \usage{
 generateTravelTimeSummary(
   gtfs,
@@ -22,7 +22,7 @@ generateTravelTimeSummary(
 
 \item{routeID}{route_id string to calculate travel times for between stop_ids}
 
-\item{startHHMMSSRange}{beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00"). Default is 6AM}
+\item{startHHMMSSRange}{beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00"). Default is 5AM}
 
 \item{endHHMMSSRange}{end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00"). Default is 11:30PM}
 }
@@ -30,5 +30,5 @@ generateTravelTimeSummary(
 summary of travel times in specified time range
 }
 \description{
-Generate travel time summary between two stop_ids on a given route
+Generate travel time summary between two stop_ids on a given route for a time range (default is 5AM-11:30PM)
 }

@@ -1,10 +1,10 @@
-#' Generate travel time summary between two stop_ids on a given route
+#' Generate travel time summary between two stop_ids on a given route for a time range (default is 5AM-11:30PM)
 #'
 #' @param gtfs object from gtfsFunctions::formatGTFSObject()
 #' @param beginStopID stop_id string to begin travel time calculations from
 #' @param endStopID stop_id string to end travel time calculations at
 #' @param routeID route_id string to calculate travel times for between stop_ids
-#' @param startHHMMSSRange beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00"). Default is 6AM
+#' @param startHHMMSSRange beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00"). Default is 5AM
 #' @param endHHMMSSRange end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00"). Default is 11:30PM
 #'
 #' @return summary of travel times in specified time range
