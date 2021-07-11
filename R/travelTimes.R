@@ -4,14 +4,14 @@
 #' @param beginStopID stop_id string to begin travel time calculations from
 #' @param endStopID stop_id string to end travel time calculations at
 #' @param routeID route_id string to calculate travel times for between stop_ids
-#' @param startHHMMSSRange beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00")
-#' @param endHHMMSSRange end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00")
+#' @param startHHMMSSRange beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00"). Default is 6AM
+#' @param endHHMMSSRange end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00"). Default is 11:30PM
 #'
 #' @return summary of travel times in specified time range
 #' @export
 #' 
 generateTravelTimeSummary <- function(gtfs, beginStopID, endStopID,
-                                      routeID, startHHMMSSRange, endHHMMSSRange) {
+                                      routeID, startHHMMSSRange = "00:05:00", endHHMMSSRange ="23:30:00") {
  
   # Define piping function
   `%>%` <- magrittr::`%>%`

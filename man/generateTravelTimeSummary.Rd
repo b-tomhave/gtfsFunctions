@@ -9,8 +9,8 @@ generateTravelTimeSummary(
   beginStopID,
   endStopID,
   routeID,
-  startHHMMSSRange,
-  endHHMMSSRange
+  startHHMMSSRange = "00:05:00",
+  endHHMMSSRange = "23:30:00"
 )
 }
 \arguments{
@@ -22,9 +22,9 @@ generateTravelTimeSummary(
 
 \item{routeID}{route_id string to calculate travel times for between stop_ids}
 
-\item{startHHMMSSRange}{beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00")}
+\item{startHHMMSSRange}{beginning HHMMSS string of timeframe to get travel times in (i.e. "15:30:00"). Default is 6AM}
 
-\item{endHHMMSSRange}{end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00")}
+\item{endHHMMSSRange}{end HHMMSS string of timeframe to get travel times in (i.e. "18:30:00"). Default is 11:30PM}
 }
 \value{
 summary of travel times in specified time range
