@@ -65,7 +65,7 @@ generateTravelTimeSummary <- function(gtfs, beginStopID, endStopID,
 }
 
 
-#' Calculate travel time median between two stop_ids on a given route
+#' Calculate travel time median between two stop_ids on a given route for a time range (default is 5AM-11:30PM)
 #'
 #' @param gtfs object from gtfsFunctions::formatGTFSObject()
 #' @param beginStopID stop_id string to begin travel time calculations from
@@ -78,7 +78,7 @@ generateTravelTimeSummary <- function(gtfs, beginStopID, endStopID,
 #' @export
 #' 
 calculateMedianTravelTime <- function(gtfs,beginStopID, endStopID,
-                                      routeID, startHHMMSSRange, endHHMMSSRange) {
+                                      routeID, startHHMMSSRange = "00:05:00", endHHMMSSRange ="23:30:00") {
   
   as.numeric(gtfsFunctions::generateTravelTimeSummary(gtfs,beginStopID, endStopID,
                             routeID, startHHMMSSRange, endHHMMSSRange)['Median'])

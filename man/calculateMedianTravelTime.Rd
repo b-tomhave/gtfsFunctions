@@ -2,15 +2,15 @@
 % Please edit documentation in R/travelTimes.R
 \name{calculateMedianTravelTime}
 \alias{calculateMedianTravelTime}
-\title{Calculate travel time median between two stop_ids on a given route}
+\title{Calculate travel time median between two stop_ids on a given route for a time range (default is 5AM-11:30PM)}
 \usage{
 calculateMedianTravelTime(
   gtfs,
   beginStopID,
   endStopID,
   routeID,
-  startHHMMSSRange,
-  endHHMMSSRange
+  startHHMMSSRange = "00:05:00",
+  endHHMMSSRange = "23:30:00"
 )
 }
 \arguments{
@@ -30,5 +30,5 @@ calculateMedianTravelTime(
 summary of travel times in specified time range
 }
 \description{
-Calculate travel time median between two stop_ids on a given route
+Calculate travel time median between two stop_ids on a given route for a time range (default is 5AM-11:30PM)
 }
