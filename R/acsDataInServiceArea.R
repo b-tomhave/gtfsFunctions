@@ -54,7 +54,6 @@ getServiceAreaACS <- function(gtfs, variables, geography = 'tract', year = 2016,
 
   # Define piping function
   `%>%` <- magrittr::`%>%`
-  
   intersectingFIPS <- gtfsFunctions::getACSIntersectionVectors(gtfs)
   
   # Get ACS Data
