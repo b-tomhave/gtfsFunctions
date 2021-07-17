@@ -45,11 +45,12 @@ getACSIntersectionVectors <- function(gtfs) {
 #' @param geography String string for tidycensus:;get_acs() (i.e. "tract", or "county") default is tract
 #' @param year int  The year, or endyear, of the ACS sample. 5-year ACS data is available from 2009 through 2019. 1-year ACS data is available from 2005 through 2019. Defaults to 2016
 #' @param survey string for the ACS contains one-year, three-year, and five-year surveys expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."
+#' @param tidyCensusAPIKey String for tidy_census::get_acs() api key
 #'
 #' @return sf polygon of requested acs data in transit area
 #' @export
 #' 
-getServiceAreaACS <- function(gtfs, variables, geography = 'tract', year = 2016, survey = "acs5") {
+getServiceAreaACS <- function(gtfs, variables, geography = 'tract', year = 2016, survey = "acs5", tidyCensusAPIKey = NULL) {
 
   # Define piping function
   `%>%` <- magrittr::`%>%`
@@ -58,6 +59,7 @@ getServiceAreaACS <- function(gtfs, variables, geography = 'tract', year = 2016,
   
   # Get ACS Data
   tidycensus::get_acs(geography = geography,
+                      key       = tidyCensusAPIKey,
                       variables = variables,
                       state     = intersectingFIPS$stateFIPS,
                       county    = intersectingFIPS$countyFIPS,
