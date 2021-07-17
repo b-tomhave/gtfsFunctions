@@ -9,7 +9,7 @@
 #' @return returns an sf data frame with 4 columns (hex_id, routes, uniqueRouteCount, geometry), where routes contains a character vector of routes in the hex and uniqueRouteCount counts the number of routes in each hex
 #' @export
 #' 
-getServiceAreaACS <- function(gtfs, stateAbbrev = NULL, counties = NULL, tidyCensusAPIKey = NULL, hexSize = 0.01) {
+uniqueRoutesInHexTessalation <- function(gtfs, stateAbbrev = NULL, counties = NULL, tidyCensusAPIKey = NULL, hexSize = 0.01) {
   
   # Define piping function
   `%>%` <- magrittr::`%>%`
