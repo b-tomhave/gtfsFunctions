@@ -4,20 +4,10 @@
 \alias{uniqueRoutesInHexTessalation}
 \title{Return spatial polygon of hexagonal features with a count of the number of unique routes with a stop inside the hex area's contained in the specified counties}
 \usage{
-uniqueRoutesInHexTessalation(
-  gtfs,
-  stateAbbrev = NULL,
-  counties = NULL,
-  tidyCensusAPIKey = NULL,
-  hexSize = 0.01
-)
+uniqueRoutesInHexTessalation(gtfsObj, tidyCensusAPIKey = NULL, hexSize = 0.01)
 }
 \arguments{
-\item{gtfs}{object from gtfsfunctions::formatGTFSObject()}
-
-\item{stateAbbrev}{Character string or vector of character strings of state abbreviations.}
-
-\item{counties}{Character string or vector of character strings of desired counties in state.}
+\item{gtfsObj}{object from gtfsfunctions::formatGTFSObject()}
 
 \item{tidyCensusAPIKey}{String for tidy_census::get_acs() api key}
 
