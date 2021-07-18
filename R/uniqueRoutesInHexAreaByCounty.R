@@ -1,8 +1,8 @@
 #' Return spatial polygon of hexagonal features with a count of the number of unique routes with a stop inside the hex area's contained in the specified counties
 #'
 #' @param gtfs object from gtfsfunctions::formatGTFSObject()
-#' @param stateAbbrev Character string or vector of character strings of state abbreviations. 
-#' @param counties Character string or vector of character strings of desired counties in state.
+#' @param stateAbbrev Character string or vector of character strings of state abbreviations or State FIPS codes. 
+#' @param counties Character string or vector of character strings of desired counties in state or County FIPS codes.
 #' @param tidyCensusAPIKey String for tidy_census::get_acs() api key
 #' @param hexSize number specifying hex size (smaller value creates more smaller sized hexes but takes longer to load). Default = 0.01
 #'
