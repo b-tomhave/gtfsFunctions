@@ -152,7 +152,3 @@ routeId2routeShortName <- function(gtfsRoutesDataTable){
   return(namedList)
 }
 
-
-# testGTFS <- gtfsFunctions::formatGTFSObject("C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\COTA_June2021.zip")
-# test <- routeIDAtStopsWithDirAndSeq(testGTFS)
-# plot(test)
