@@ -6,12 +6,12 @@
 #' @export
 #' 
 routeIDAtStops <- function(gtfs) { 
-  setDT(gtfs$trips) # Convert to data.table
-  setDT(gtfs$stop_times) # Convert to data.table
+  data.table::setDT(gtfs$trips) # Convert to data.table
+  data.table::setDT(gtfs$stop_times) # Convert to data.table
   
   #Load All Trips 
   shape_key <- gtfs$trips[, list(trip_id,route_id,direction_id,service_id)]%>%unique()
-  setkey(shape_key, trip_id) # Set key for joining
+  data.table::setkey(shape_key, trip_id) # Set key for joining
   
   #Load Stop_Times df for stop sequence and arrival time at stops  (Takes a few seconds)
   stopTimes <- gtfs$stop_times[, list(trip_id,stop_id,stop_sequence)] %>% unique()
@@ -22,15 +22,54 @@ routeIDAtStops <- function(gtfs) {
   
   
   #Load Stops df for stop coordinates and name
-  setDT(gtfs$stops) # Convert to data.table
+  data.table::setDT(gtfs$stops) # Convert to data.table
   stopsDf<-gtfs$stops[, list(stop_id, stop_name, stop_lat, stop_lon)] %>% unique()
-  setkey(stopsDf, stop_id)
+  data.table::setkey(stopsDf, stop_id)
   
   # Inner join stopsDf and stop times on stop_id
   stopsDf <- stopsDf[stopTimes, on = 'stop_id']
   
   stopsDf[, list(stop_id, route_id,  
                  stop_name, stop_lat, stop_lon)]%>%unique()
+}
+
+#' Function To Load GTFS Stops With Necessary Info (including direction_id and stop_sequence)
+#'
+#' @param gtfs gtfs object from tidytransit read_gtfs()
+#'
+#' @return data.table with one stop record for each route at a stop
+#' @export
+#' 
+routeIDAtStopsWithDirAndSeq <- function(gtfs) { 
+  # Define piping function
+  `%>%` <- magrittr::`%>%`
+  
+  data.table::setDT(gtfs$trips) # Convert to data.table
+  data.table::setDT(gtfs$stop_times) # Convert to data.table
+  
+  #Load All Trips 
+  shape_key <- gtfs$trips[, list(trip_id, route_id, direction_id, service_id)]%>%unique()
+  data.table::setkey(shape_key, trip_id) # Set key for joining
+  
+  #Load Stop_Times df for stop sequence and arrival time at stops  (Takes a few seconds)
+  stopTimes <- gtfs$stop_times[, list(trip_id, stop_id, stop_sequence)] %>% unique()
+  data.table::setkey(stopTimes, trip_id, stop_id)
+  
+  # Inner join shape and stop times on trip_id
+  stopTimes <- stopTimes[shape_key, on = 'trip_id']
+  
+  
+  #Load Stops df for stop coordinates and name
+  data.table::setDT(gtfs$stops) # Convert to data.table
+  stopsDf<-gtfs$stops[, list(stop_id, stop_name, stop_lat, stop_lon)] %>% unique()
+  data.table::setkey(stopsDf, stop_id)
+  
+  # Inner join stopsDf and stop times on stop_id
+  stopsDf <- stopsDf[stopTimes, on = 'stop_id']
+  
+  stopsDf[, list(stop_id, route_id,  
+                 stop_name, stop_lat, stop_lon,
+                 stop_sequence, direction_id)]%>%unique()
 }
 
 
@@ -112,3 +151,8 @@ routeId2routeShortName <- function(gtfsRoutesDataTable){
   names(namedList) <- as.vector(gtfsRoutesDataTable$route_id)
   return(namedList)
 }
+
+
+# testGTFS <- gtfsFunctions::formatGTFSObject("C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\COTA_June2021.zip")
+# test <- routeIDAtStopsWithDirAndSeq(testGTFS)
+# plot(test)
