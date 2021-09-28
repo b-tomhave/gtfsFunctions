@@ -27,8 +27,6 @@ transitTime2HHMMSS <- function(x){
 }
 
 
-as.numeric(as.TransitTime("06:00:00"))
-as.numeric(lubridate::hms("06:00:00"))
 
 #' Function to create time of day (TOD) data.table
 #'
@@ -66,4 +64,3 @@ todTable <- function(earlyStart   = 14400,
   TOD
 }
 
-test <- todTable()

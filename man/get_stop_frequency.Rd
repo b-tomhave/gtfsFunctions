@@ -6,6 +6,7 @@
 \usage{
 get_stop_frequency(
   gtfs_obj,
+  by_TOD = T,
   startHHMMSS = "06:00:00",
   endHHMMSS = "22:00:00",
   service_ids = c(),
@@ -14,6 +15,8 @@ get_stop_frequency(
 }
 \arguments{
 \item{gtfs_obj}{object from tidytransit read_gtfs()}
+
+\item{by_TOD}{(optional) TRUE/FALSE indicating if segmenting frequencies by time of day periods or overall. If by_TOD == T don't provide start and end HHMMSS}
 
 \item{startHHMMSS}{(optional) a string HH:MM:SS (default 06:00:00 (6 am))}
 
