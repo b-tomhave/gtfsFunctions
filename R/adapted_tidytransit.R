@@ -112,8 +112,9 @@ get_route_frequency <- function(gtfs_obj,
 
 # gtfsPath_Jul <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\MSP_MetroTransit_June21.zip"
 # gtfsPath_Jul2 <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\ETS_Edmonton_July21.zip"
-# 
-# gtfs3 <- gtfsFunctions::formatGTFSObject(gtfsPath_Jul)
+# # 
+# gtfs4 <- formatGTFSObject(gtfsPath_Jul2)
+# aweseom <- tidytransit::read_gtfs(gtfsPath_Jul2)
 # test <- gtfsFunctions::routeIDAtStops(gtfs3)
 # 
 # ptm <- proc.time()

@@ -19,15 +19,46 @@ formatGTFSObject <- function(gtfsZipPath){
     #                                     'stop_times', #'calendar', 'calendar_dates',
     #                                     'shapes'))
   
-  # Ensure all Input Files are Data.Table Objects
-  data.table::setDT(x$stop_times)
-  data.table::setDT(x$trips)
-  data.table::setDT(x$shapes)
-  data.table::setDT(x$calendar)
-  data.table::setDT(x$calendar_dates)
-  data.table::setDT(x$stops)
-  data.table::setDT(x$agency)
-  data.table::setDT(x$routes)
+  # In an Input Files exists format as Data.Table Objects
+  # stop_times.txt
+  # if(exists(x$stop_times)){
+  #   data.table::setDT(x$stop_times)
+  # }
+  
+  # Trips.txt
+  if(exists('trips', where = x)){
+    data.table::setDT(x$trips)
+  }
+  
+  # Shapes.txt
+  if(exists('shapes', where = x)){
+    data.table::setDT(x$shapes)
+  }
+  
+  # Calendar.txt
+  if(exists('calendar', where = x)){
+    data.table::setDT(x$calendar)
+  }
+  
+  # Calendar_dates.txt
+  if(exists('calendar_dates', where = x)){
+    data.table::setDT(x$calendar_dates)
+  }
+  
+  # stops.txt
+  if(exists('stops', where = x)){
+    data.table::setDT(x$stops)
+  }
+  
+  # agency.txt
+  if(exists('agency', where = x)){
+    data.table::setDT(x$agency)
+  }
+  
+  # routes.txt
+  if(exists('routes', where = x)){
+    data.table::setDT(x$routes)
+  }
   
   # Only Include Stops that occur in stop_times file
   x$stops <- x$stops[stop_id %in% unique(as.character(x$stop_times$stop_id))]
