@@ -25,3 +25,45 @@ transitTime2HHMMSS <- function(x){
         stringr::str_pad(x%%60, 2, pad = "0"),
         sep = ':')
 }
+
+
+as.numeric(as.TransitTime("06:00:00"))
+as.numeric(lubridate::hms("06:00:00"))
+
+#' Function to create time of day (TOD) data.table
+#'
+#' @param earlyStart integer seconds past midnight at which the early period starts
+#' @param AMPeakStart integer seconds past midnight at which the AMPeak period starts
+#' @param MiddayStart integer seconds past midnight at which the midday period starts
+#' @param PMPeakStart integer seconds past midnight at which the PMPeak period starts
+#' @param EveningStart integer seconds past midnight at which the evening period starts
+#' @param NightStart integer seconds past midnight at which the night period starts
+#' @param NightEnd integer seconds past midnight at which the night period starts
+#'
+#' @return character column or single character in character "HH:MM:SS" format
+#' @export
+#' 
+# Add Time of Day By Stop_time
+# Reference table of seconds after midnight time of day (TOD) table for reference
+todTable <- function(earlyStart   = 14400,
+                     AMPeakStart  = 21600,
+                     MiddayStart  = 32400,
+                     PMPeakStart  = 54000,
+                     EveningStart = 66600,
+                     NightStart   = 75600,
+                     NightEnd     = 86400){
+  TOD <- data.table::data.table(BeginTime = c(0,earlyStart, AMPeakStart, MiddayStart, PMPeakStart, EveningStart, NightStart, NightEnd),
+                                EndTime = c(earlyStart, AMPeakStart, MiddayStart, PMPeakStart, EveningStart, NightStart, NightEnd, NightEnd+earlyStart),
+                                Period = factor(c("Owl","Early","AM Peak","Midday",
+                                                  "PM Peak","Evening", "Night","Owl"),
+                                                levels = c("Early","AM Peak","Midday", "PM Peak",
+                                                           "Evening", "Night", "Owl"),
+                                                ordered = T))
+  
+  # Create Minutes Per TOD
+  TOD[, periodMinutes := (EndTime - BeginTime)/60]
+  
+  TOD
+}
+
+test <- todTable()

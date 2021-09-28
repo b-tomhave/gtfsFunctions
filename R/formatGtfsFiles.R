@@ -12,20 +12,22 @@
 #' 
 formatGTFSObject <- function(gtfsZipPath){
   # Import tidytransit gtfs object from path and only focusing on key required files listed below
-  x <- gtfsio::import_gtfs(as.character(gtfsZipPath),
-                              files = c('agency', 'stops', 'routes', 'trips',
-                                        'stop_times', #'calendar', 'calendar_dates',
-                                        'shapes'))
+  x <- tidytransit::read_gtfs(gtfsPath_Jul)
+    
+    # gtfsio::import_gtfs(as.character(gtfsZipPath),
+    #                           files = c('agency', 'stops', 'routes', 'trips',
+    #                                     'stop_times', #'calendar', 'calendar_dates',
+    #                                     'shapes'))
   
   # Ensure all Input Files are Data.Table Objects
-  setDT(x$stop_times)
-  setDT(x$trips)
-  setDT(x$shapes)
-  # setDT(x$calendar)
-  # setDT(x$calendar_dates)
-  setDT(x$stops)
-  setDT(x$agency)
-  setDT(x$routes)
+  data.table::setDT(x$stop_times)
+  data.table::setDT(x$trips)
+  data.table::setDT(x$shapes)
+  data.table::setDT(x$calendar)
+  data.table::setDT(x$calendar_dates)
+  data.table::setDT(x$stops)
+  data.table::setDT(x$agency)
+  data.table::setDT(x$routes)
   
   # Only Include Stops that occur in stop_times file
   x$stops <- x$stops[stop_id %in% unique(as.character(x$stop_times$stop_id))]
@@ -58,3 +60,5 @@ formatGTFSObject <- function(gtfsZipPath){
   
   return(x)
 }
+
+

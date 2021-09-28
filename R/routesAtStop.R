@@ -67,6 +67,7 @@ routeIDAtStopsWithDirAndSeq <- function(gtfs) {
   # Inner join stopsDf and stop times on stop_id
   stopsDf <- stopsDf[stopTimes, on = 'stop_id']
   
+  
   stopsDf[, list(stop_id, route_id,  
                  stop_name, stop_lat, stop_lon,
                  stop_sequence, direction_id)]%>%unique()
