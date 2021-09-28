@@ -12,7 +12,7 @@
 #' 
 formatGTFSObject <- function(gtfsZipPath){
   # Import tidytransit gtfs object from path and only focusing on key required files listed below
-  x <- tidytransit::read_gtfs(gtfsPath_Jul)
+  x <- tidytransit::read_gtfs(gtfsZipPath)
     
     # gtfsio::import_gtfs(as.character(gtfsZipPath),
     #                           files = c('agency', 'stops', 'routes', 'trips',

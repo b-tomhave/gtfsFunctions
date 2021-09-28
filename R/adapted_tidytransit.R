@@ -110,54 +110,18 @@ get_route_frequency <- function(gtfs_obj,
   return(routes_frequency)
 }
 
-
-
-
-
-
 # gtfsPath_Jul <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\MSP_MetroTransit_June21.zip"
 # gtfsPath_Jul2 <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\ETS_Edmonton_July21.zip"
 # 
-# library(tidytransit)
-# library(dplyr)
-# gtfs2 <- tidytransit::read_gtfs(gtfsPath_Jul)
-# gtfs_obj <- tidytransit::read_gtfs(gtfsPath_Jul)
+# gtfs3 <- gtfsFunctions::formatGTFSObject(gtfsPath_Jul)
+# test <- gtfsFunctions::routeIDAtStops(gtfs3)
 # 
 # ptm <- proc.time()
-# # 0.68 Seconds
-# test2 <- tidytransit::get_stop_frequency(gtfs2,
-#                                           start_hour = 6,
-#                                           end_hour = 22,
-#                                           service_ids = NULL,
-#                                           by_route = T)
+# # 4 Seconds
+# route_frequency <-  gtfsFunctions::get_route_frequency(gtfs3,
+#                                         startHHMMSS = "09:00:00",
+#                                         endHHMMSS = "12:00:00",
+#                                         service_ids = NULL,
+#                                         by_route = T)
 # proc.time() - ptm
-# 
-# 
-# ptm <- proc.time()
-# # 4.43 Seconds
-# test <- get_stop_frequency(gtfs2,
-#                                startHHMMSS = "06:00:00",
-#                                endHHMMSS = "22:00:00",
-#                                service_ids = NULL,
-#                                by_route = T)
-# proc.time() - ptm
-# 
-# ptm <- proc.time()
-# # 3.72 Seconds
-# routes_frequency <- get_route_frequency(gtfs2,
-#                     startHHMMSS = "09:00:00",
-#                     endHHMMSS = "12:00:00",
-#                     service_ids = NULL,
-#                     by_route = T)
-# proc.time() - ptm
-# 
-# # Reorder
-# routes_frequency <- routes_frequency[gtools::mixedorder(routes_frequency$route_id),]
-# 
-# 
-# proc.time() - ptm
-# 
-# 
-# test <- gtfsFunctions::routeIDAtStops(gtfs2)
-# gtfs3 <- formatGTFSObject(gtfsPath_Jul)
-
+# route_frequency <- route_frequency[gtools::mixedorder(route_frequency$route_id),]
