@@ -82,6 +82,7 @@ get_stop_frequency <- function(gtfs_obj,
     # Create periodMinutes Field indicating the duration of custom period
     stop_times <- stop_times[, periodMinutes := (as.numeric(lubridate::hms(endHHMMSS)) - as.numeric(lubridate::hms(startHHMMSS)))/60]
     stop_times <- stop_times[, period := "custom"]
+    stop_times <- stop_times[, timeSpan := paste0(startHHMMSS,'--',endHHMMSS)]
 
   }
 
