@@ -2,8 +2,15 @@
 #'
 #' @param gtfs_obj object from tidytransit read_gtfs()
 #' @param by_TOD (optional) TRUE/FALSE indicating if segmenting frequencies by time of day periods or overall. If by_TOD == T don't provide start and end HHMMSS
-#' @param startHHMMSS (optional) a string HH:MM:SS (default 06:00:00 (6 am))
-#' @param endHHMMSS (optional) a string HH:MM:SS (default 22:00:00 (10 pm))
+#' @param tod_earlyStart   (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Early period start (default 14400 (4AM))
+#' @param tod_AMPeakStart  (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod AM Peak period start (default 21600 (6AM))
+#' @param tod_MiddayStart  (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Midday period start (default 32400 (9AM))
+#' @param tod_PMPeakStart  (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod PM Peak period start (default 54000 (3PM))
+#' @param tod_EveningStart (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Evening period start (default 66600 (6:30PM))
+#' @param tod_NightStart   (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Night period start (default 75600 (9PM))
+#' @param tod_NightEnd     (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Night period end (default 86400 (4AM (i.e. 28:00)))
+#' @param startHHMMSS (optional) If by_TOD = False, specify a string HH:MM:SS (default 06:00:00 (6 am))
+#' @param endHHMMSS (optional) If by_TOD = False, specify a string HH:MM:SS (default 22:00:00 (10 pm))
 #' @param service_ids (optional) a string from the calendar dataframe identifying a particular service schedule.
 #' @param by_route (optional) TRUE/FALSE indicating if segmenting frequencies by route. (defaul TRUE)
 #'
@@ -13,6 +20,13 @@
 #' 
 get_stop_frequency <- function(gtfs_obj,
                                by_TOD = T,
+                               tod_earlyStart   = 14400,
+                               tod_AMPeakStart  = 21600,
+                               tod_MiddayStart  = 32400,
+                               tod_PMPeakStart  = 54000,
+                               tod_EveningStart = 66600,
+                               tod_NightStart   = 75600,
+                               tod_NightEnd     = 86400,
                                startHHMMSS = "06:00:00",
                                endHHMMSS = "22:00:00",
                                service_ids = c(),
@@ -51,7 +65,15 @@ get_stop_frequency <- function(gtfs_obj,
   # Change output based on if using TOD or custom time range
   if (by_TOD == T){
     # Get TOD Associated with stop arrival and join to stop times
-    stop_times <- stop_times[gtfsFunctions::todTable(), `:=`(period = Period, periodMinutes = periodMinutes), on = .(arrival_time > BeginTime, departure_time <= EndTime)]
+    stop_times <- stop_times[gtfsFunctions::todTable(tod_earlyStart,
+                                                     tod_AMPeakStart,
+                                                     tod_MiddayStart,
+                                                     tod_PMPeakStart,
+                                                     tod_EveningStart,
+                                                     tod_NightStart,
+                                                     tod_NightEnd
+                                                     ),
+                             `:=`(period = Period, periodMinutes = periodMinutes, timeSpan = timeSpan), on = .(arrival_time > BeginTime, departure_time <= EndTime)]
     
   }else{
     # Get Stop Times in Custom Time Range
@@ -70,9 +92,9 @@ get_stop_frequency <- function(gtfs_obj,
   # find number of departure per stop_id, route_id, service_id
   # If aggregated by route_id
   if(by_route == T) {
-    freq <- stop_times[, .(n_departures = .N, periodMinutes = periodMinutes),  by = .(stop_id, route_id, direction_id, service_id, period)]
+    freq <- stop_times[, .(n_departures = .N, periodMinutes = periodMinutes, timeSpan = timeSpan),  by = .(stop_id, route_id, direction_id, service_id, period)]
   } else {
-    freq <- stop_times[, .(n_departures = .N, periodMinutes = periodMinutes),  by = .(stop_id, service_id, period)]
+    freq <- stop_times[, .(n_departures = .N, periodMinutes = periodMinutes, timeSpan = timeSpan),  by = .(stop_id, service_id, period)]
   }
   
   nrow(freq)
@@ -80,7 +102,7 @@ get_stop_frequency <- function(gtfs_obj,
   #durationMinutes <- (as.numeric(gtfsFunctions::as.TransitTime(endHHMMSS))-as.numeric(gtfsFunctions::as.TransitTime(startHHMMSS)))/60
   freq$headwayMinutes <- round(freq$periodMinutes / freq$n_departures)
   
-  freq %>% distinct()
+  freq %>% na.omit() %>% distinct() 
 }
 
 
@@ -89,8 +111,15 @@ get_stop_frequency <- function(gtfs_obj,
 #'
 #' @param gtfs_obj object from tidytransit read_gtfs()
 #' @param by_TOD (optional) TRUE/FALSE indicating if segmenting frequencies by time of day periods or overall. If by_TOD == T don't provide start and end HHMMSS
-#' @param startHHMMSS (optional) a string HH:MM:SS (default 06:00:00 (6 am))
-#' @param endHHMMSS (optional) a string HH:MM:SS (default 22:00:00 (10 pm))
+#' @param tod_earlyStart   (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Early period start (default 14400 (4AM))
+#' @param tod_AMPeakStart  (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod AM Peak period start (default 21600 (6AM))
+#' @param tod_MiddayStart  (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Midday period start (default 32400 (9AM))
+#' @param tod_PMPeakStart  (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod PM Peak period start (default 54000 (3PM))
+#' @param tod_EveningStart (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Evening period start (default 66600 (6:30PM))
+#' @param tod_NightStart   (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Night period start (default 75600 (9PM))
+#' @param tod_NightEnd     (optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Night period end (default 86400 (4AM (i.e. 28:00)))
+#' @param startHHMMSS (optional) If by_TOD = False, specify a string HH:MM:SS (default 06:00:00 (6 am))
+#' @param endHHMMSS (optional) If by_TOD = False, specify a string HH:MM:SS (default 22:00:00 (10 pm))
 #' @param service_ids (optional) a string from the calendar dataframe identifying a particular service schedule.
 #' @param by_route (optional) TRUE/FALSE indicating if segmenting frequencies by route. (defaul TRUE)
 #'
@@ -100,21 +129,39 @@ get_stop_frequency <- function(gtfs_obj,
 #' 
 get_route_frequency <- function(gtfs_obj,
                                 by_TOD = T,
+                                tod_earlyStart   = 14400,
+                                tod_AMPeakStart  = 21600,
+                                tod_MiddayStart  = 32400,
+                                tod_PMPeakStart  = 54000,
+                                tod_EveningStart = 66600,
+                                tod_NightStart   = 75600,
+                                tod_NightEnd     = 86400,
                                 startHHMMSS = "06:00:00",
                                 endHHMMSS = "22:00:00",
                                 service_ids = c(),
                                 by_route = T) {
 
   # Get Frequency of all routes at all stops they servce
-  stops_frequency <- get_stop_frequency(gtfs_obj, by_TOD, startHHMMSS, 
-                                        endHHMMSS, service_ids, by_route)  
+  stops_frequency <- get_stop_frequency(gtfs_obj,
+                                        by_TOD,
+                                        tod_earlyStart,
+                                        tod_AMPeakStart,
+                                        tod_MiddayStart,
+                                        tod_PMPeakStart,
+                                        tod_EveningStart,
+                                        tod_NightStart,
+                                        tod_NightEnd,
+                                        startHHMMSS, 
+                                        endHHMMSS,
+                                        service_ids,
+                                        by_route)  
   
   # For each route take average of frequencies at all stops on that route
   if (dim(stops_frequency)[[1]]!=0) {
     # If grouping by time of day then make sure to incude as a variable
     if (by_TOD == T){
       routes_frequency <- stops_frequency %>%
-        dplyr::group_by(route_id, direction_id, period) %>%
+        dplyr::group_by(route_id, direction_id, period, timeSpan) %>%
         dplyr::summarise(total_departures = sum(n_departures),
                          median_headways = 
                            as.integer(round(median(headwayMinutes),0)),
@@ -139,8 +186,17 @@ get_route_frequency <- function(gtfs_obj,
   } else {
     warning("Failed to calculate frequency, try passing a service_id from calendar_df.")
   }
-  return(routes_frequency)
+  return(routes_frequency %>% na.omit())
 }
+
+#
+# test <- gtfsFunctions::todTable(earlyStart   = 14400,
+#                                 AMPeakStart  = 21600,
+#                                 MiddayStart  = 32400,
+#                                 PMPeakStart  = 54000,
+#                                 EveningStart = 66600,
+#                                 NightStart   = 75600,
+#                                 NightEnd     = 86400)
 
 # gtfsPath_Jul <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\MSP_MetroTransit_June21.zip"
 # gtfsPath_Jul2 <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\ETS_Edmonton_July21.zip"
@@ -148,19 +204,26 @@ get_route_frequency <- function(gtfs_obj,
 # gtfs_obj <- gtfsFunctions::formatGTFSObject(gtfsPath_Jul)
 # # aweseom <- tidytransit::read_gtfs(gtfsPath_Jul2)
 # # test <- gtfsFunctions::routeIDAtStops(gtfs3)
-# # 
+# #
 # library(dplyr)
 # ptm <- proc.time()
 # # 1 Second
 # 
 # stops <- get_stop_frequency(gtfs_obj,
-#                                                   by_TOD = F,
+#                                                   by_TOD = T,
 #                                                   service_ids = NULL,
-#                                                   by_route = T) %>%na.omit()
+#                                                   by_route = T)
 # 
 # ptm <- proc.time()
 # route_frequency2 <-  get_route_frequency(gtfs_obj,
 #                                           by_TOD = T,
+#                                           tod_earlyStart   = 14400,
+#                                           tod_AMPeakStart  = 22000,
+#                                           tod_MiddayStart  = 32400,
+#                                           tod_PMPeakStart  = 54000,
+#                                           tod_EveningStart = 66600,
+#                                           tod_NightStart   = 75600,
+#                                           tod_NightEnd     = 86400,
 #                                           # startHHMMSS = "13:00:00",
 #                                           # endHHMMSS = "13:30:00",
 #                                           service_ids = NULL,

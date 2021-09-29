@@ -58,6 +58,10 @@ todTable <- function(earlyStart   = 14400,
                                                            "Evening", "Night", "Owl"),
                                                 ordered = T))
   
+  # Create Time Span Column
+  TOD[, timeSpan := paste0(gtfsFunctions::transitTime2HHMMSS(BeginTime),
+                           '--',
+                           gtfsFunctions::transitTime2HHMMSS(EndTime))]
   # Create Minutes Per TOD
   TOD[, periodMinutes := (EndTime - BeginTime)/60]
   

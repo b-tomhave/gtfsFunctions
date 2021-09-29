@@ -7,6 +7,13 @@
 get_route_frequency(
   gtfs_obj,
   by_TOD = T,
+  tod_earlyStart = 14400,
+  tod_AMPeakStart = 21600,
+  tod_MiddayStart = 32400,
+  tod_PMPeakStart = 54000,
+  tod_EveningStart = 66600,
+  tod_NightStart = 75600,
+  tod_NightEnd = 86400,
   startHHMMSS = "06:00:00",
   endHHMMSS = "22:00:00",
   service_ids = c(),
@@ -18,9 +25,23 @@ get_route_frequency(
 
 \item{by_TOD}{(optional) TRUE/FALSE indicating if segmenting frequencies by time of day periods or overall. If by_TOD == T don't provide start and end HHMMSS}
 
-\item{startHHMMSS}{(optional) a string HH:MM:SS (default 06:00:00 (6 am))}
+\item{tod_earlyStart}{(optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Early period start (default 14400 (4AM))}
 
-\item{endHHMMSS}{(optional) a string HH:MM:SS (default 22:00:00 (10 pm))}
+\item{tod_AMPeakStart}{(optional) If by_TOD = False, specify an integer (seconds past midnight) for tod AM Peak period start (default 21600 (6AM))}
+
+\item{tod_MiddayStart}{(optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Midday period start (default 32400 (9AM))}
+
+\item{tod_PMPeakStart}{(optional) If by_TOD = False, specify an integer (seconds past midnight) for tod PM Peak period start (default 54000 (3PM))}
+
+\item{tod_EveningStart}{(optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Evening period start (default 66600 (6:30PM))}
+
+\item{tod_NightStart}{(optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Night period start (default 75600 (9PM))}
+
+\item{tod_NightEnd}{(optional) If by_TOD = False, specify an integer (seconds past midnight) for tod Night period end (default 86400 (4AM (i.e. 28:00)))}
+
+\item{startHHMMSS}{(optional) If by_TOD = False, specify a string HH:MM:SS (default 06:00:00 (6 am))}
+
+\item{endHHMMSS}{(optional) If by_TOD = False, specify a string HH:MM:SS (default 22:00:00 (10 pm))}
 
 \item{service_ids}{(optional) a string from the calendar dataframe identifying a particular service schedule.}
 
