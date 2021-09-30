@@ -2,10 +2,11 @@
 % Please edit documentation in R/adapted_tidytransit.R
 \name{get_route_frequency}
 \alias{get_route_frequency}
-\title{Calculate frequencies per route from tidytransit gtfs object (This is addapted from tidytransit frequencies.R). Uses stop_times and trips}
+\title{Calculate frequencies per route from tidytransit gtfs object (This is addapted from tidytransit frequencies.R). Uses stop_times and trips. If no service_ids provided, service with most trips used}
 \usage{
 get_route_frequency(
   gtfs_obj,
+  by_directionId = T,
   by_TOD = T,
   tod_earlyStart = 14400,
   tod_AMPeakStart = 21600,
@@ -16,12 +17,13 @@ get_route_frequency(
   tod_NightEnd = 86400,
   startHHMMSS = "06:00:00",
   endHHMMSS = "22:00:00",
-  service_ids = c(),
-  by_route = T
+  service_ids = NULL
 )
 }
 \arguments{
 \item{gtfs_obj}{object from tidytransit read_gtfs()}
+
+\item{by_directionId}{(optional) TRUE/FALSE indicating if segmenting route frequencies by direction_id (default TRUE)}
 
 \item{by_TOD}{(optional) TRUE/FALSE indicating if segmenting frequencies by time of day periods or overall. If by_TOD == T don't provide start and end HHMMSS}
 
@@ -43,13 +45,11 @@ get_route_frequency(
 
 \item{endHHMMSS}{(optional) If by_TOD = False, specify a string HH:MM:SS (default 22:00:00 (10 pm))}
 
-\item{service_ids}{(optional) a string from the calendar dataframe identifying a particular service schedule.}
-
-\item{by_route}{(optional) TRUE/FALSE indicating if segmenting frequencies by route. (defaul TRUE)}
+\item{service_ids}{(optional) a string from the calendar dataframe identifying a particular service schedule. If none provided, service with most trips used}
 }
 \value{
 tbl_df headways per route
 }
 \description{
-Calculate frequencies per route from tidytransit gtfs object (This is addapted from tidytransit frequencies.R). Uses stop_times and trips
+Calculate frequencies per route from tidytransit gtfs object (This is addapted from tidytransit frequencies.R). Uses stop_times and trips. If no service_ids provided, service with most trips used
 }
