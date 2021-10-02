@@ -7,6 +7,7 @@
 get_stop_frequency(
   gtfs_obj,
   by_directionId = T,
+  by_headsign = T,
   by_TOD = T,
   tod_earlyStart = 14400,
   tod_AMPeakStart = 21600,
@@ -24,6 +25,8 @@ get_stop_frequency(
 \item{gtfs_obj}{object from tidytransit read_gtfs()}
 
 \item{by_directionId}{(optional) TRUE/FALSE indicating if segmenting route frequencies by direction_id (default TRUE)}
+
+\item{by_headsign}{(optional) TRUE/FALSE indicating if segmenting frequencies trip_headsgign overall.}
 
 \item{by_TOD}{(optional) TRUE/FALSE indicating if segmenting frequencies by time of day periods or overall. If by_TOD == T don't provide start and end HHMMSS}
 
