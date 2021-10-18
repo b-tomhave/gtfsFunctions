@@ -256,6 +256,14 @@ get_route_frequency <- function(gtfs_obj,
     if (by_headsign == F){
       routes_frequency <- routes_frequency[, trip_headsign := NULL] %>% dplyr::distinct()
     }
+    
+    # Determine Frequency Category By Period
+    routes_frequency[, freqClass := ifelse(median_headways <= 15, "15 Minutes or Better", "Other"), by = period]
+    routes_frequency[, freqClass := ifelse(median_headways > 15 & median_headways <=20, "15-20 Minutes", freqClass), by = period]
+    routes_frequency[, freqClass := ifelse(median_headways > 20 & median_headways <=30, "20-30 Minutes", freqClass), by = period]
+    routes_frequency[, freqClass := ifelse(median_headways > 30 & median_headways <=60, "30-60 Minutes", freqClass), by = period]
+    routes_frequency[, freqClass := ifelse(median_headways > 60, "60+ Minutes", freqClass), by = period]
+    
   }else {
     warning("Failed to calculate frequency, try passing a service_id from calendar_df.")
   }
@@ -292,10 +300,10 @@ get_route_frequency <- function(gtfs_obj,
 #                                             service_ids = NULL)
 # 
 # ptm <- proc.time()
-# route_frequency2 <-   get_route_frequency(gtfs_obj,
-#                                                         by_directionId = T,
-#                                                         by_headsign = T,
-#                                                         by_TOD = T,
+# route_frequency <-   gtfsFunctions::get_route_frequency(gtfs_obj,
+#                                                         by_directionId = F,
+#                                                         by_headsign = F,
+#                                                         by_TOD = F,
 #                                                         # tod_earlyStart   = 14400,
 #                                                         # tod_AMPeakStart  = 22000,
 #                                                         # tod_MiddayStart  = 32400,
@@ -306,5 +314,155 @@ get_route_frequency <- function(gtfs_obj,
 #                                                         startHHMMSS = "06:00:00",
 #                                                         endHHMMSS = "19:00:00",
 #                                                         service_ids = NULL)
-# # proc.time() - ptm
-# route_frequency2 <- route_frequency2[gtools::mixedorder(route_frequency2$route_id),]
+# 
+# 
+# 
+# 
+# library(plotly)
+# test <- route_frequency2[period == "AM Peak"]
+# test$route_id <- factor(test$route_id, levels = unique(test$route_id)[order(test$median_headways, decreasing = T)])
+# test[, freq := ifelse(median_headways <= 15, "15 Minutes or Better", "Other")]
+# test[, freq := ifelse(median_headways > 15 & median_headways <=20, "15-20 Minutes", freq)]
+# test[, freq := ifelse(median_headways > 20 & median_headways <=30, "20-30 Minutes", freq)]
+# test[, freq := ifelse(median_headways > 30 & median_headways <=60, "30-60 Minutes", freq)]
+# test[, freq := ifelse(median_headways > 60, "60+ Minutes", freq)]
+# 
+# test$freq <- factor(test$freq, levels = c("15 Minutes or Better", "15-20 Minutes",
+#                                                                                 "20-30 Minutes", "30-60 Minutes", "60+ Minutes"))
+# # Combine into comma separated string
+# output <- test[, paste(route_id, collapse = ", "), by = freq] 
+# output$freq <- factor(output$freq, levels = c("15 Minutes or Better", "15-20 Minutes",
+#                                                                                 "20-30 Minutes", "30-60 Minutes", "60+ Minutes"))           
+# 
+# work <- knitr::combine_words(output$V1[1])
+# 
+# library(kableExtra)
+# 
+# row.names(output)
+# row.names(output) <- output$freq
+# output %>%
+#   kbl() %>%
+#   kable_paper("hover", full_width = F)
+# 
+# 
+# 
+# 
+# tbl <- reactable(
+#   route_frequency2,
+#   pagination = FALSE,
+#   defaultSorted = "exclusive_followers_pct",
+#   defaultColDef = colDef(headerClass = "header", align = "left"),
+#   columns = list(
+#     account = colDef(
+#       cell = function(value) {
+#         url <- paste0("https://twitter.com/", value)
+#         tags$a(href = url, target = "_blank", paste0("@", value))
+#       },
+#       width = 150
+#     ),
+#     followers = colDef(
+#       defaultSortOrder = "desc",
+#       cell = function(value) {
+#         width <- paste0(value * 100 / max(data$followers), "%")
+#         value <- format(value, big.mark = ",")
+#         value <- format(value, width = 9, justify = "right")
+#         bar <- div(
+#           class = "bar-chart",
+#           style = list(marginRight = "6px"),
+#           div(class = "bar", style = list(width = width, backgroundColor = "#3fc1c9"))
+#         )
+#         div(class = "bar-cell", span(class = "number", value), bar)
+#       }
+#     ),
+#     exclusive_followers_pct = colDef(
+#       name = "Exclusive Followers",
+#       defaultSortOrder = "desc",
+#       cell = JS("function(cellInfo) {
+#         // Format as percentage
+#         const pct = (cellInfo.value * 100).toFixed(1) + '%'
+#         // Pad single-digit numbers
+#         let value = pct.padStart(5)
+#         // Show % on first row only
+#         if (cellInfo.viewIndex > 0) {
+#           value = value.replace('%', ' ')
+#         }
+#         // Render bar chart
+#         return (
+#           '<div class=\"bar-cell\">' +
+#             '<span class=\"number\">' + value + '</span>' +
+#             '<div class=\"bar-chart\" style=\"background-color: #e1e1e1\">' +
+#               '<div class=\"bar\" style=\"width: ' + pct + '; background-color: #fc5185\"></div>' +
+#             '</div>' +
+#           '</div>'
+#         )
+#       }"),
+#       html = TRUE
+#     )
+#   ),
+#   compact = TRUE,
+#   class = "followers-tbl"
+# )
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# this2 <- test[, .(Routes = paste(route_id, collapse = ",")), by = freq] 
+# this[,'Routes' := lapply(.SD, strsplit, split = ','), .SDcols= 'Routes']
+# 
+# this$Routes
+# this[, 'Routes2' := list(gtools::mixedsort(unlist(Routes))), by =]
+# gtools::mixedsort(this$Routes)
+# 
+# 
+# stringr::str_squish
+# gtools::mixedsort(unlist(this$Routes[1]))
+# 
+# this[,Routes][str]
+# 
+# 
+# gtools::mixedsort(strsplit(this$Routes, ','))
+# 
+# how <- strsplit(this$Routes, ',')
+# 
+# how
+# 
+# unlist(strsplit(this$Routes, ','))
+# 
+# test <- as.list(el(strsplit(this$Routes, ",")))
+# 
+# 
+# gtools::mixedsort(this$Routes)
+# 
+# this$Routes <- sapply(strsplit(this$Routes, ','), function(x) 
+#   toString(gtools::mixedsort(x)))
+# 
+# 
+# gtools::mixedsort(output$V1)
+# 
+# # routes_frequency[, freqClass := ifelse(median_headways <= 15, "15 Minutes or Better", "Other"), by = period]
+# # routes_frequency[, freqClass := ifelse(median_headways > 15 & median_headways <=20, "15-20 Minutes", freqClass), by = period]
+# # routes_frequency[, freqClass := ifelse(median_headways > 20 & median_headways <=30, "20-30 Minutes", freqClass), by = period]
+# # routes_frequency[, freqClass := ifelse(median_headways > 30 & median_headways <=60, "30-60 Minutes", freqClass), by = period]
+# # routes_frequency[, freqClass := ifelse(median_headways > 60, "60+ Minutes", freqClass), by = period]
+# 
+# 
+# gtfsFunctions::routeId2routeShortName(gtfs_obj$routes)
+# route_frequency2$formatted <- as.character(please[route_frequency2$route_id])
+# 
+# route_frequency2[, .(shift(route_id)), by = period]
+# route_frequency2[, paste(route_id, collapse = ", "), by = period] 
+#                                            
+#                                            
+# plot_ly(test, x = ~median_headways, y = ~route_id, color = ~freq, type = "bar", name = ~freq)
+# # # proc.time() - ptm
+# # route_frequency2 <- route_frequency2[gtools::mixedorder(route_frequency2$route_id),]
