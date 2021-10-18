@@ -12,11 +12,37 @@
 #' 
 formatGTFSObject <- function(gtfsZipPath){
   # Import tidytransit gtfs object from path and only focusing on key required files listed below
-  x <- gtfsio::import_gtfs(as.character(gtfsZipPath),
-                              files = c('agency', 'stops', 'routes', 'trips',
-                                        'stop_times', #'calendar', 'calendar_dates',
-                                        'shapes'))
+  #ptm <- proc.time()
+  possibleGTFSFiles <- c("agency.txt",
+                         "stops.txt",
+                         "routes.txt",
+                         "trips.txt",
+                         "stop_times.txt",
+                         "calendar.txt",
+                         "calendar_dates.txt",
+                         "fare_attributes.txt",
+                         "fare_rules.txt",
+                         "shapes.txt",
+                         "frequencies.txt",
+                         "transfers.txt",
+                         "pathways.txt",
+                         "levels.txt",
+                         "feed_info.txt",
+                         "translations.txt",
+                         "attributions.txt")
   
+  zipFileNames <- unzip(zipfile = gtfsZipPath)
+  #print(proc.time() - ptm) # Two Seconds to get to here
+  # x <- gtfsio::import_gtfs(as.character(gtfsZipPath),
+  #                          skip = basename(excludeNonTxtAndNested))
+  # 
+  # print(stringr::str_remove_all(zonator::file_path_sans_ext(zipFileNames)[(basename(zipFileNames) %in% possibleGTFSFiles)],
+  #                               "\\./"))
+  # # zipFileNames[!(zipFileNames%in%excludeNonTxtAndNested)]
+  x <- gtfsio::import_gtfs(as.character(gtfsZipPath),
+                            files = stringr::str_remove_all(zonator::file_path_sans_ext(zipFileNames)[(basename(zipFileNames) %in% possibleGTFSFiles)],
+                                                              "\\./"))
+  #print(proc.time() - ptm) # This takes 6 seconds
   # Ensure all Input Files are Data.Table Objects
   setDT(x$stop_times)
   setDT(x$trips)
@@ -26,7 +52,7 @@ formatGTFSObject <- function(gtfsZipPath){
   setDT(x$stops)
   setDT(x$agency)
   setDT(x$routes)
-  
+  #print(proc.time() - ptm)
   # Only Include Stops that occur in stop_times file
   x$stops <- x$stops[stop_id %in% unique(as.character(x$stop_times$stop_id))]
   
@@ -55,6 +81,7 @@ formatGTFSObject <- function(gtfsZipPath){
   # Create Column That is route_short_name if present, else route_id
   # Useful for working with data where route_id doesn't directly correspond to same number that is public-facing
   x$routes$formattedRouteName <- with(x$routes, ifelse(route_short_name == "", as.character(route_id), as.character(route_short_name)))
-  
+  #print(proc.time() - ptm)
   return(x)
 }
+#test <- formatGTFSObject("/Users/bentomhave/Documents/Data_GTFS/Summer2021/CTA_June21 2.zip")
