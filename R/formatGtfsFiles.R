@@ -31,7 +31,7 @@ formatGTFSObject <- function(gtfsZipPath){
                          "translations.txt",
                          "attributions.txt")
   
-  zipFileNames <- unzip(zipfile = gtfsZipPath)
+  zipFileNames <- unzip(zipfile = gtfsZipPath, list = T )$Name
   
   x <- gtfsio::import_gtfs(as.character(gtfsZipPath),
                             files = stringr::str_remove_all(zonator::file_path_sans_ext(zipFileNames)[(basename(zipFileNames) %in% possibleGTFSFiles)],
@@ -47,45 +47,45 @@ formatGTFSObject <- function(gtfsZipPath){
   
   # In an Input Files exists format as Data.Table Objects
   # stop_times.txt
-  # if(exists(x$stop_times)){
-  #   data.table::setDT(x$stop_times)
-  # }
-  
-  # # Trips.txt
-  # if(exists('trips', where = x)){
-  #   data.table::setDT(x$trips)
-  # }
-  # 
-  # # Shapes.txt
-  # if(exists('shapes', where = x)){
-  #   data.table::setDT(x$shapes)
-  # }
-  # 
-  # # Calendar.txt
-  # if(exists('calendar', where = x)){
-  #   data.table::setDT(x$calendar)
-  # }
-  # 
-  # # Calendar_dates.txt
-  # if(exists('calendar_dates', where = x)){
-  #   data.table::setDT(x$calendar_dates)
-  # }
-  # 
-  # # stops.txt
-  # if(exists('stops', where = x)){
-  #   data.table::setDT(x$stops)
-  # }
-  # 
-  # # agency.txt
-  # if(exists('agency', where = x)){
-  #   data.table::setDT(x$agency)
-  # }
-  # 
-  # # routes.txt
-  # if(exists('routes', where = x)){
-  #   data.table::setDT(x$routes)
-  # }
-  
+  if(exists('stop_times', where = x)){
+    data.table::setDT(x$stop_times)
+  }
+
+  # Trips.txt
+  if(exists('trips', where = x)){
+    data.table::setDT(x$trips)
+  }
+
+  # Shapes.txt
+  if(exists('shapes', where = x)){
+    data.table::setDT(x$shapes)
+  }
+
+  # Calendar.txt
+  if(exists('calendar', where = x)){
+    data.table::setDT(x$calendar)
+  }
+
+  # Calendar_dates.txt
+  if(exists('calendar_dates', where = x)){
+    data.table::setDT(x$calendar_dates)
+  }
+
+  # stops.txt
+  if(exists('stops', where = x)){
+    data.table::setDT(x$stops)
+  }
+
+  # agency.txt
+  if(exists('agency', where = x)){
+    data.table::setDT(x$agency)
+  }
+
+  # routes.txt
+  if(exists('routes', where = x)){
+    data.table::setDT(x$routes)
+  }
+
   # Only Include Stops that occur in stop_times file
   x$stops <- x$stops[stop_id %in% unique(as.character(x$stop_times$stop_id))]
   
@@ -118,5 +118,6 @@ formatGTFSObject <- function(gtfsZipPath){
   return(x)
 }
 
+# x <- tidytransit::read_gtfs("/Users/bentomhave/Documents/Data_GTFS/Summer2021/CTA_June21.zip")
+# test <- formatGTFSObject("/Users/bentomhave/Documents/Data_GTFS/Summer2021/CTA_June21.zip")
 
-# test <- gtfsFunctions::formatGTFSObject("/Users/bentomhave/Documents/Data_GTFS/Summer2021/CTA_June21.zip")
