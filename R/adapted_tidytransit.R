@@ -80,6 +80,8 @@ get_stop_frequency <- function(gtfs_obj,
   # Get stop times on selected service_id trips 
   stop_times <- na.omit(gtfs_obj$stop_times[trip_id %in% trips$trip_id])
 
+  stop_times[,arrival_time := lubridate::hms(arrival_time)]
+  stop_times[,departure_time := lubridate::hms(departure_time)]
   # Change output based on if using TOD or custom time range
   if (by_TOD == T){
     # Make Sure Times Are Valid (in other words, ensure the tod values are sequentially greater than one another)
@@ -283,17 +285,17 @@ get_route_frequency <- function(gtfs_obj,
 # #                                 NightStart   = 75600,
 # #                                 NightEnd     = 86400)
 # 
-# gtfsPath_Jul <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\MSP_MetroTransit_June21.zip"
-# gtfsPath_Jul2 <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\ETS_Edmonton_July21.zip"
-# #
+#gtfsPath_Jul <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\MSP_MetroTransit_June21.zip"
+#gtfsPath_Jul2 <- "C:\\Users\\ben.tomhave\\OneDrive - AECOM\\Documents\\Projects\\03_GTFS_Data\\ETS_Edmonton_July21.zip"
+#
 # gtfs_obj <- gtfsFunctions::formatGTFSObject(gtfsPath_Jul)
-# # aweseom <- tidytransit::read_gtfs(gtfsPath_Jul2)
-# # test <- gtfsFunctions::routeIDAtStops(gtfs3)
-# 
-# ptm <- proc.time()
-# # 1 Second
-# 
-# stops <-get_stop_frequency(gtfs_obj,
+# # # aweseom <- tidytransit::read_gtfs(gtfsPath_Jul2)
+# # # test <- gtfsFunctions::routeIDAtStops(gtfs3)
+# # 
+# # ptm <- proc.time()
+# # # 1 Second
+# # 
+# stops <-gtfsFunctions::get_stop_frequency(gtfs_obj,
 #                                             by_directionId = F,
 #                                             by_headsign = T,
 #                                             by_TOD = T,
