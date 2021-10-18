@@ -119,4 +119,4 @@ formatGTFSObject <- function(gtfsZipPath){
 }
 
 
-#test <- formatGTFSObject("/Users/bentomhave/Documents/Data_GTFS/Summer2021/CTA_June21.zip")
+# test <- gtfsFunctions::formatGTFSObject("/Users/bentomhave/Documents/Data_GTFS/Summer2021/CTA_June21.zip")

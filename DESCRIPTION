@@ -24,4 +24,5 @@ Imports:
 	gtools,
 	tigris,
 	sp,
-	lubridate
+	lubridate,
+	zonator
