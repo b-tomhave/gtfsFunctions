@@ -23,4 +23,5 @@ Imports:
 	stringr,
 	gtools,
 	tigris,
-	sp
+	sp,
+	lubridate

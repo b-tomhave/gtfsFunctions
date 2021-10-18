@@ -22,15 +22,17 @@ uniqueRoutesInHexTessalation <- function(gtfsObj, tidyCensusAPIKey = NULL, hexSi
                              c(max(gtfsObj$stops$stop_lon), min(gtfsObj$stops$stop_lat)),
                              c(min(gtfsObj$stops$stop_lon), min(gtfsObj$stops$stop_lat)))
   
-  gtfsBBoxPolygon <-sf::st_polygon(list(boundingBoxCoords))%>%sf::st_sfc(crs = 4326)
-  
+  gtfsBBoxPolygon <-sf::st_polygon(list(boundingBoxCoords))%>%sf::st_sfc()
   
   # Get Hex Tessalation
   size <- hexSize
-  
+
   hex_points <- sp::spsample(sf::as_Spatial(gtfsBBoxPolygon), type = "hexagonal", cellsize = size)
   hex_grid <- sf::st_as_sf(sp::HexPoints2SpatialPolygons(hex_points, dx = size))
   hex_grid$hex_id <- seq(1:nrow(hex_grid))
+  
+  # Set Hex Grid CRS to be 4326 (Same as simpleRoutesAtStops)
+  sf::st_crs(hex_grid) <- sf::st_crs(simpleRoutesAtStops)
   
   
   # Get Routes at Stops
@@ -54,5 +56,3 @@ uniqueRoutesInHexTessalation <- function(gtfsObj, tidyCensusAPIKey = NULL, hexSi
   
   return(spatial_hex2Routes)
 }
-
-
