@@ -140,8 +140,6 @@ get_stop_frequency <- function(gtfs_obj,
 
   #calculate average headway
   freq$headwayMinutes <- round(freq$periodMinutes / freq$n_departures)
-  print("hi")
-  print(freq)
   freq %>% na.omit() %>% dplyr::distinct() 
 }
 
@@ -244,7 +242,7 @@ get_route_frequency <- function(gtfs_obj,
       }else{
         routes_frequency <- stops_frequency %>%
           distinct() %>%
-          dplyr::group_by(route_id, trip_headsign, timeSpan) %>%
+          dplyr::group_by(route_id, trip_headsign, timeSpan, period) %>%
           dplyr::summarise(total_departures = sum(n_departures),
                            median_headways = 
                            as.integer(round(median(headwayMinutes),0)),
@@ -258,7 +256,7 @@ get_route_frequency <- function(gtfs_obj,
     # If not aggregating by headsign drop that column and get distinct as it has placeholder 'Not Generated' as created in stops_frequency
     data.table::setDT(routes_frequency) # Make sure output is data.table
     if (by_headsign == F){
-      routes_frequency <- routes_frequency[, trip_headsign := NULL] %>% dplyr::distinct()
+      routes_frequency[, trip_headsign := NULL] %>% dplyr::distinct()
     }
     
     # Determine Frequency Category By Period
@@ -303,9 +301,9 @@ get_route_frequency <- function(gtfs_obj,
 #                                             by_headsign = T,
 #                                             by_TOD = T,
 #                                             service_ids = NULL)
-# # 
-# # ptm <- proc.time()
-# route_frequency <-   gtfsFunctions::get_route_frequency(gtfs_obj,
+# # # 
+# # # ptm <- proc.time()
+# route_frequency <-   get_route_frequency(gtfs_obj,
 #                                                         by_directionId = F,
 #                                                         by_headsign = F,
 #                                                         by_TOD = F,
@@ -319,8 +317,8 @@ get_route_frequency <- function(gtfs_obj,
 #                                                         startHHMMSS = "06:00:00",
 #                                                         endHHMMSS = "19:00:00",
 #                                                         service_ids = NULL)
-# # 
-# # 
+# # # 
+# # # 
 # # 
 # # 
 # # library(plotly)
